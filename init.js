@@ -247,7 +247,7 @@ const _map_init_scop_13 = 45;
 const max_card_hub = 8;
 const max_scope = 10;
 
-const API_BACKEND = "http://api.critterland.world";
+const API_BACKEND = "https://api.critterland.world";
 const AUTHORIZATION = "AUTHORIZATION";
 
 function funcSetup(val) {
