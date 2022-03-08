@@ -198,7 +198,8 @@ async function onDisconnect() {
     jwtToken = "";
     _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet).setString(lb.wallet_address_value);
     _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet_balance).setString(lb.coin_info_value);
-
+   
+    cc.director.runScene(new cc.TransitionFade(0.5, new LoadingScene()));
 }
 
 
@@ -247,7 +248,8 @@ const _map_init_scop_13 = 45;
 const max_card_hub = 8;
 const max_scope = 10;
 
-const API_BACKEND = "https://api.critterland.world";
+// const API_BACKEND = "https://api.critterland.world";
+const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 
 function funcSetup(val) {
@@ -262,6 +264,22 @@ function GetInfo() {
         success: function(result) { 
            user.coin = result.coin;
            user.level = result.level;
+           user.index = result.index;
+
+           if(user.index == -1) {//first
+                cc.director.runScene(new cc.TransitionFade(0.5, new FirstScene()));
+           } else {
+                cc.director.runScene(new cc.TransitionFade(0.5, new HomeMapScene()));
+           }
+        }
+     }); 
+}
+
+function UpdateInfo() {
+    $.get({
+        url: API_BACKEND+"/account/update/"+user.index,
+        success: function(result) { 
+           user.index = result.index;
         }
      }); 
 }
