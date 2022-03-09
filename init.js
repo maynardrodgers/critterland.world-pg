@@ -211,8 +211,8 @@ const SYS_RANGER = "Ranger"
 const SYS_MAGICIAN = "Magician"
 const SYS_ARCHER = "Archer"
 
-// const API_BACKEND = "https://api.critterland.world";
-const API_BACKEND = "http://127.0.0.1:4000";
+const API_BACKEND = "https://api.critterland.world";
+// const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 var isProcessLogin = false;
 function funcSetup(val) {
