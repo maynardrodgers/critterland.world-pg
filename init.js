@@ -101,6 +101,8 @@ async function fetchAccountData() {
 
                                         funcSetup(jwtToken);
                                         GetInfo();
+                                        GetAllCard();
+                                        GetAllCardByAddress();
                                         }
                                     });
                                 }
@@ -202,56 +204,17 @@ async function onDisconnect() {
     cc.director.runScene(new cc.TransitionFade(0.5, new LoadingScene()));
 }
 
-
-const _map_fee_1 = 1;
-const _map_fee_2 = 2;
-const _map_fee_3 = 3;
-const _map_fee_4 = 4;
-const _map_fee_5 = 5;
-const _map_fee_6 = 10;
-const _map_fee_7 = 10;
-const _map_fee_8 = 15;
-const _map_fee_9 = 15;
-const _map_fee_10 = 20;
-const _map_fee_11 = 25;
-const _map_fee_12 = 30;
-const _map_fee_13 = 50;
-
-const _map_reward_1 = 5;
-const _map_reward_2 = 6;
-const _map_reward_3 = 8;
-const _map_reward_4 = 9;
-const _map_reward_5 = 10;
-const _map_reward_6 = 20;
-const _map_reward_7 = 25;
-const _map_reward_8 = 30;
-const _map_reward_9 = 45;
-const _map_reward_10 = 55;
-const _map_reward_11 = 65;
-const _map_reward_12 = 60;
-const _map_reward_13 = 10;
-
-const _map_init_scop_1 = 5;
-const _map_init_scop_2 = 6;
-const _map_init_scop_3 = 8;
-const _map_init_scop_4 = 9;
-const _map_init_scop_5 = 10;
-const _map_init_scop_6 = 20;
-const _map_init_scop_7 = 25;
-const _map_init_scop_8 = 30;
-const _map_init_scop_9 = 45;
-const _map_init_scop_10 = 55;
-const _map_init_scop_11 = 65;
-const _map_init_scop_12 = 60;
-const _map_init_scop_13 = 45;
-
 const max_card_hub = 8;
 const max_scope = 10;
+const SYS_WARRRIOR = "Warrrior"
+const SYS_RANGER = "Ranger"
+const SYS_MAGICIAN = "Magician"
+const SYS_ARCHER = "Archer"
 
-const API_BACKEND = "https://api.critterland.world";
-// const API_BACKEND = "http://127.0.0.1:4000";
+// const API_BACKEND = "https://api.critterland.world";
+const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
-
+var isProcessLogin = false;
 function funcSetup(val) {
     $.ajaxSetup({
         headers: { AUTHORIZATION: val }
@@ -275,6 +238,17 @@ function GetInfo() {
      }); 
 }
 
+function UpdateInfoData() {
+    $.get({
+        url: API_BACKEND+"/account/info",
+        success: function(result) { 
+           user.coin = result.coin;
+           user.level = result.level;
+           user.index = result.index;
+        }
+     }); 
+} 
+
 function UpdateInfo() {
     $.get({
         url: API_BACKEND+"/account/update/"+user.index,
@@ -283,3 +257,59 @@ function UpdateInfo() {
         }
      }); 
 }
+
+function GetAllCard() {
+    $.get({
+        url: API_BACKEND+"/card/all",
+        success: function(result) { 
+           cards = result;
+           cardsWarrrior = cards.filter(function(card){return card.sys===SYS_WARRRIOR});
+           cardsArcher = cards.filter(function(card){return card.sys===SYS_ARCHER});
+           cardsRanger = cards.filter(function(card){return card.sys===SYS_RANGER});
+           cardsMagician = cards.filter(function(card){return card.sys===SYS_MAGICIAN});
+        }
+     }); 
+}
+
+function GetAllCardByAddress() {
+    $.get({
+        url: API_BACKEND+"/card/user/all",
+        success: function(result) { 
+           user.cards = result.filter(function(card){return card.card_hub === -1});
+           user.hubs = result.filter(function(card){return card.card_hub > -1});
+        }
+     }); 
+}
+
+function UpdateCardHub() {
+    $.ajax({
+        url: API_BACKEND+"/card/user/hub",
+        type:"POST",
+        data: JSON.stringify(user),
+        dataType:"json",       
+        success: function(result) {            
+        }
+    });
+}
+
+function BuyCard(coin) {
+    $.ajax({
+        url: API_BACKEND+"/card/user/buy/"+coin,
+        type:"POST",
+        dataType:"json",       
+        success: function(result) {   
+            user.buyCards = result;         
+            cc.director.runScene(new cc.TransitionFade(0.5, new GetCardsActionScene()));
+
+            UpdateInfoData();
+            GetAllCardByAddress();
+        },
+        error: function(){
+            _warmErrorCoin.runAction(cc.sequence(
+                cc.fadeIn(1),
+                cc.fadeOut(1)
+            ));
+        }
+    });
+}
+
