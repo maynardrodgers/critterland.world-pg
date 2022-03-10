@@ -207,12 +207,12 @@ async function onDisconnect() {
 const max_card_hub = 8;
 const max_scope = 10;
 const SYS_WARRRIOR = "Warrrior"
-const SYS_RANGER = "Ranger"
-const SYS_MAGICIAN = "Magician"
+const SYS_TANGER = "Tanker"
+const SYS_MAGICIAN = "Magic"
 const SYS_ARCHER = "Archer"
 
 const API_BACKEND = "https://api.critterland.world";
-// const API_BACKEND = "http://127.0.0.1:4000";
+//const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 var isProcessLogin = false;
 function funcSetup(val) {
@@ -265,7 +265,7 @@ function GetAllCard() {
            cards = result;
            cardsWarrrior = cards.filter(function(card){return card.sys===SYS_WARRRIOR});
            cardsArcher = cards.filter(function(card){return card.sys===SYS_ARCHER});
-           cardsRanger = cards.filter(function(card){return card.sys===SYS_RANGER});
+           cardsRanger = cards.filter(function(card){return card.sys===SYS_TANGER});
            cardsMagician = cards.filter(function(card){return card.sys===SYS_MAGICIAN});
         }
      }); 
