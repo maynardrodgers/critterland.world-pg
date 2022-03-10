@@ -297,6 +297,7 @@
                 <file name="src/resource.js"/>
                 <file name="src/loadingScene.js"/>
                 <file name="src/mainScene.js"/>
+                <file name="src/mainNewScene.js"/>
                 <file name="src/mainMapPlusScene.js"/>
                 <file name="src/homeScene.js"/>
                 <file name="src/homeMapScene.js"/>
