@@ -103,6 +103,10 @@ async function fetchAccountData() {
                                         GetInfo();
                                         GetAllCard();
                                         GetAllCardByAddress();
+
+                                        setInterval(function(){
+                                            UpdateInfoData();
+                                        }, 60000);
                                         }
                                     });
                                 }
@@ -202,6 +206,7 @@ async function onDisconnect() {
     _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet_balance).setString(lb.coin_info_value);
    
     cc.director.runScene(new cc.TransitionFade(0.5, new LoadingScene()));
+    IS_LOAD_PAGE = true;
 }
 
 const max_card_hub = 8;
@@ -210,6 +215,7 @@ const SYS_WARRRIOR = "Warrrior"
 const SYS_TANGER = "Tanker"
 const SYS_MAGICIAN = "Magic"
 const SYS_ARCHER = "Archer"
+var IS_LOAD_PAGE = false;
 
 const API_BACKEND = "https://api.critterland.world";
 //const API_BACKEND = "http://127.0.0.1:4000";
@@ -225,10 +231,10 @@ function GetInfo() {
     $.get({
         url: API_BACKEND+"/account/info",
         success: function(result) { 
-           user.coin = result.coin;
+           user.coinG = result.coin;
            user.level = result.level;
            user.index = result.index;
-
+           user.name = result.name;
            if(user.index == -1) {//first
                 cc.director.runScene(new cc.TransitionFade(0.5, new FirstScene()));
            } else {
@@ -242,16 +248,22 @@ function UpdateInfoData() {
     $.get({
         url: API_BACKEND+"/account/info",
         success: function(result) { 
-           user.coin = result.coin;
+           user.coinG = result.coin;
            user.level = result.level;
            user.index = result.index;
+           user.name = result.name;
+        },
+        error: function() {
+            if(IS_LOAD_PAGE== false) {
+                cc.director.runScene(new cc.TransitionFade(0.5, new LoadingScene()));
+            }
         }
      }); 
 } 
 
 function UpdateInfo() {
     $.get({
-        url: API_BACKEND+"/account/update/"+user.index,
+        url: API_BACKEND+"/account/update/"+user.index+"/"+user.name,
         success: function(result) { 
            user.index = result.index;
         }
@@ -282,6 +294,7 @@ function GetAllCardByAddress() {
 }
 
 function UpdateCardHub() {
+    if(user.hubs.length < 1) return
     $.ajax({
         url: API_BACKEND+"/card/user/hub",
         type:"POST",
