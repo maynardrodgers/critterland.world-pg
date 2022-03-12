@@ -205,7 +205,7 @@ async function onDisconnect() {
     _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet).setString(lb.wallet_address_value);
     _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet_balance).setString(lb.coin_info_value);
    
-    cc.director.runScene(new cc.user.cards[index](0.5, new LoadingScene()));
+    cc.director.runScene(new cc.TransitionFade(0.5, new LoadingScene()));
     IS_LOAD_PAGE = true;
 }
 
@@ -236,9 +236,9 @@ function GetInfo() {
            user.index = result.index;
            user.name = result.name;
            if(user.index == -1) {//first
-                cc.director.runScene(new cc.user.cards[index](0.5, new FirstScene()));
+                cc.director.runScene(new cc.TransitionFade(0.5, new FirstScene()));
            } else {
-                cc.director.runScene(new cc.user.cards[index](0.5, new HomeMapScene()));
+                cc.director.runScene(new cc.TransitionFade(0.5, new HomeMapScene()));
            }
         }
      }); 
