@@ -327,3 +327,6 @@ function BuyCard(coin) {
     });
 }
 
+function FindData(arr, id) {
+    return arr.find(element => element.id == id);
+}
