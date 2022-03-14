@@ -209,6 +209,14 @@ async function onDisconnect() {
     IS_LOAD_PAGE = true;
 }
 
+window.onbeforeunload = function(event){
+    if(IS_VS_PAGE == true) {
+        return confirm(lb.msg_leave_play);
+        } else {
+        return confirm(lb.msg_leave);
+    }  
+};
+
 const max_card_hub = 8;
 const max_scope = 10;
 const SYS_WARRRIOR = "Warrrior"
@@ -216,9 +224,10 @@ const SYS_TANGER = "Tanker"
 const SYS_MAGICIAN = "Magic"
 const SYS_ARCHER = "Archer"
 var IS_LOAD_PAGE = false;
-
-const API_BACKEND = "https://api.critterland.world";
-//const API_BACKEND = "http://127.0.0.1:4000";
+var IS_VS_PAGE = false;
+var IS_CALL_BACK = false; //call function reload
+// const API_BACKEND = "https://api.critterland.world";
+const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 var isProcessLogin = false;
 function funcSetup(val) {
@@ -330,3 +339,52 @@ function BuyCard(coin) {
 function FindData(arr, id) {
     return arr.find(element => element.id == id);
 }
+function ConfirmCampaign() {
+    return confirm(lb.msg_leave_play) 
+}
+function Campage(name, scene) {
+    if (typeof name == 'undefined') return
+    $.ajax({
+        url: API_BACKEND+"/campage/get/"+name,
+        type:"GET",
+        dataType:"json",       
+        success: function(result) {  
+            console.log(result) ;
+            if(result <= 0) {
+                _warmErrorCoinCampage.runAction(cc.sequence(
+                    cc.fadeIn(1),
+                    cc.fadeOut(1)
+                ));
+            } else {
+                user.idProcss = result; //for next process
+                cc.director.runScene(new cc.TransitionFade(0.5, scene));
+                UpdateInfoData();
+            }           
+        },
+        error: function(){
+            onDisconnect();
+        }
+    });
+} 
+
+function CampageEnd() {
+    if (user.isProcss == false) {
+        user.isProcss == true;
+    }
+    $.ajax({
+        url: API_BACKEND+"/campage/get/"+user.idProcss,
+        type:"POST",
+        dataType:"json",   
+        data: JSON.stringify(user),    
+        success: function(result) {  
+            IS_CALL_BACK = true;
+            user.isProcss == false;
+            console.log(result)   ;
+            data = result.cards_boot;
+            user.reward = result.user_reward;
+        },
+        error: function(){
+            onDisconnect();
+        }
+    });
+} 
