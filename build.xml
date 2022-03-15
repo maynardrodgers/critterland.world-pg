@@ -306,6 +306,7 @@
                 <file name="src/getCardsActionScene.js"/>
                 <file name="src/campaignScene.js"/>
                 <file name="src/multiplayersScene.js"/>
+                <file name="src/windmillScene.js"/>
                 <file name="src/mysteriousGateScene.js"/>
                 <file name="src/cardHubScene.js"/>
                 <file name="src/libraryScene.js"/>
