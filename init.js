@@ -297,6 +297,7 @@ function GetAllCardByAddress() {
     $.get({
         url: API_BACKEND+"/card/user/all",
         success: function(result) { 
+           user.allCards = result;
            user.cards = result.filter(function(card){return card.card_hub === -1});
            user.hubs = result.filter(function(card){return card.card_hub > -1});
         }
