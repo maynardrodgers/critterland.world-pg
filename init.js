@@ -448,6 +448,7 @@ function GetFreeItem() {
             cc.fadeOut(1)
             ));
             UpdateInfoData();
+            GetAllItemsByAddress();
         },
         error: function(){
             _msgErrorItemFree.runAction(cc.sequence(
