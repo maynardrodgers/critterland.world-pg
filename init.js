@@ -229,7 +229,7 @@ var IS_LOAD_PAGE = false;
 var IS_VS_PAGE = false;
 var IS_CALL_BACK = false; //call function reload
 const API_BACKEND = "https://api.critterland.world";
-// const API_BACKEND = "http://127.0.0.1:4000";
+//const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 var isProcessLogin = false;
 function funcSetup(val) {
@@ -246,6 +246,7 @@ function GetInfo() {
            user.level = result.level;
            user.index = result.index;
            user.name = result.name;
+           user.IsBlessedFountains = result.is_blessed_fountains;
            if(user.index == -1) {//first
                 cc.director.runScene(new cc.TransitionFade(0.5, new FirstScene()));
            } else {
@@ -263,6 +264,7 @@ function UpdateInfoData() {
            user.level = result.level;
            user.index = result.index;
            user.name = result.name;
+           user.IsBlessedFountains = result.is_blessed_fountains;
         },
         error: function() {
             if(IS_LOAD_PAGE== false) {
@@ -433,4 +435,25 @@ function BuyItem(idItem) {
             ));
         }
     });
+}
+
+function GetFreeItem() {
+    $.get({
+        url: API_BACKEND+"/item/free/item",
+        success: function(result) { 
+           user.items = result;
+
+           _msgGetItemSuccess.runAction(cc.sequence(
+            cc.fadeIn(1),
+            cc.fadeOut(1)
+            ));
+            UpdateInfoData();
+        },
+        error: function(){
+            _msgErrorItemFree.runAction(cc.sequence(
+                cc.fadeIn(1),
+                cc.fadeOut(1)
+            ));
+        }
+     }); 
 }
