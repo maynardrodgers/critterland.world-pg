@@ -103,6 +103,8 @@ async function fetchAccountData() {
                                         GetInfo();
                                         GetAllCard();
                                         GetAllCardByAddress();
+                                        GetAllItems();
+                                        GetAllItemsByAddress();
 
                                         setInterval(function(){
                                             UpdateInfoData();
@@ -227,7 +229,7 @@ var IS_LOAD_PAGE = false;
 var IS_VS_PAGE = false;
 var IS_CALL_BACK = false; //call function reload
 const API_BACKEND = "https://api.critterland.world";
-//const API_BACKEND = "http://127.0.0.1:4000";
+// const API_BACKEND = "http://127.0.0.1:4000";
 const AUTHORIZATION = "AUTHORIZATION";
 var isProcessLogin = false;
 function funcSetup(val) {
@@ -389,3 +391,46 @@ function CampageEnd() {
         }
     });
 } 
+
+function GetAllItems() {
+    $.get({
+        url: API_BACKEND+"/item/all",
+        success: function(result) { 
+           allItems = result;
+        }
+     }); 
+}
+
+function GetAllItemsByAddress() {
+    $.get({
+        url: API_BACKEND+"/item/user/all",
+        success: function(result) { 
+           user.items = result;
+        }
+     }); 
+}
+
+function BuyItem(idItem) {
+    $.ajax({
+        url: API_BACKEND+"/item/buy/"+idItem,
+        type:"POST",
+        dataType:"json",       
+        success: function(result) {           
+            UpdateInfoData();
+            GetAllItemsByAddress();
+
+            _popupStore.runAction(cc.moveTo(1, cc.p(config.size_width/2, config.size_height*2)).easing(cc.easeElasticInOut(0.5)));
+            _msgBuyItemSuccess.runAction(cc.sequence(
+                cc.fadeIn(1),
+                cc.fadeOut(1)
+            ));
+            _lbCoinG.setString(''+user.coinG);
+        },
+        error: function(){
+            _warmErrorCoinStore.runAction(cc.sequence(
+                cc.fadeIn(1),
+                cc.fadeOut(1)
+            ));
+        }
+    });
+}
