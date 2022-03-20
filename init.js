@@ -97,18 +97,14 @@ async function fetchAccountData() {
                                 if(err == null) {
                                     $.get({url: API_BACKEND+"/author/auth/"+accounts[0]+"/"+signature.result
                                     , success: function(result){
-                                        jwtToken = result;
+                                            jwtToken = result;
 
-                                        funcSetup(jwtToken);
-                                        GetInfo();
-                                        GetAllCard();
-                                        GetAllCardByAddress();
-                                        GetAllItems();
-                                        GetAllItemsByAddress();
-
-                                        setInterval(function(){
-                                            UpdateInfoData();
-                                        }, 60000);
+                                            funcSetup(jwtToken);
+                                            GetInfo();
+                                            GetAllCard();
+                                            GetAllCardByAddress();
+                                            GetAllItems();
+                                            GetAllItemsByAddress();
                                         }
                                     });
                                 }
@@ -120,7 +116,7 @@ async function fetchAccountData() {
                 });
             }
             
-
+            if (typeof _popup == 'undefined') return; 
             _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet).setString(selectedAccount);
             _popup.getChildByTag(config.popup_default).getChildByTag(config.popup_wallet_balance).setString(balanceBnb+" BNB");
 
@@ -265,6 +261,11 @@ function UpdateInfoData() {
            user.index = result.index;
            user.name = result.name;
            user.IsBlessedFountains = result.is_blessed_fountains;
+
+           if (typeof _item == 'undefined') return 
+           if(user.IsBlessedFountains > -1) {
+                _item.loadTextures(itemsBlessedFounTain[user.IsBlessedFountains].src); 
+           }
         },
         error: function() {
             if(IS_LOAD_PAGE== false) {
